@@ -18,7 +18,7 @@ async def on_ready():
 async def bl(ctx,member):
     print(member)
     black_list.append(member)
-    await ctx.send('hi')
+    await ctx.send('пользователь забанен')
     with open('blacklist.json','w') as file:
         json.dump(black_list,file,indent=2,ensure_ascii=False)
         if  black_list.extend(member):
@@ -30,6 +30,16 @@ async def on_member_join(member):
     print(str(member))
     if str(member) in black_list:
         await member.ban(reason='in bl')
+
+@bot.command(pass_context = True)
+@commands.has_permissions(ban_members = True)
+async def delete(ctx,member):
+    if member in black_list:
+        black_list.remove(str(member))
+        with open('blacklist.json', 'w') as file:
+            json.dump(black_list, file, indent=2, ensure_ascii=False)
+            await ctx.send('пользователь не в черном списке')
+
 
 
 bot.run('OTE3NDA0MTM4MDc2MjU4MzM1.Ya4NLw.NjRHDxwmRcoXdrrDPqoPJxffsxo')
