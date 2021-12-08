@@ -13,6 +13,7 @@ bot = commands.Bot(command_prefix = ';', intents=intents)
 @bot.event
 async def on_ready():
     print('Bot Connected')
+
 @bot.command(pass_context = True)
 @commands.has_permissions(ban_members = True)
 async def bl(ctx,member):
@@ -21,8 +22,7 @@ async def bl(ctx,member):
     await ctx.send('пользователь забанен')
     with open('blacklist.json','w') as file:
         json.dump(black_list,file,indent=2,ensure_ascii=False)
-        if  black_list.extend(member):
-            print('member added')
+
 
     print(black_list)
 @bot.event
@@ -39,7 +39,29 @@ async def delete(ctx,member):
         with open('blacklist.json', 'w') as file:
             json.dump(black_list, file, indent=2, ensure_ascii=False)
             await ctx.send('пользователь не в черном списке')
+@bot.command(pass_context = True)
+@commands.has_permissions(ban_members = True)
+async def mute(ctx,member:discord.Member):
+    mute_role = discord.utils.get(ctx.message.guild.roles,name = 'В МУТЕ')
+    await member.add_roles(mute_role)
+    await ctx.send(f'пользователя {member} замутили')
+@bot.command(pass_context = True)
+@commands.has_permissions(ban_members = True)
+async def unmute(ctx,member:discord.Member):
+    mute_role = discord.utils.get(ctx.message.guild.roles,name = 'В МУТЕ')
+    await member.remove_roles(mute_role)
+    await ctx.send(f'пользователя {member} размутили')
+
+@bot.command(pass_context = True)
+@commands.has_permissions(ban_members = True)
+async def checkbl(ctx):
+    message=""
+    for item in black_list:
+        message = f'{message} {item}\n'
+    await ctx.send(message)
 
 
 
-bot.run('OTE3NDA0MTM4MDc2MjU4MzM1.Ya4NLw.NjRHDxwmRcoXdrrDPqoPJxffsxo')
+
+
+bot.run(config.key)
