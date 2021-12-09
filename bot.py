@@ -1,3 +1,5 @@
+import random
+
 import discord
 import json
 from  discord.ext import commands
@@ -7,6 +9,8 @@ with open('blacklist.json','r') as file:
 black_list = black_listJson
 print(black_listJson)
 print(type(black_list))
+integers = {}
+
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix = ';', intents=intents)
@@ -59,9 +63,46 @@ async def checkbl(ctx):
     for item in black_list:
         message = f'{message} {item}\n'
     await ctx.send(message)
+tess = []
+lives = {}
+@bot.command(pass_context = True)
+async def game(ctx,integer = None):
+    if not integer == None and not str(ctx.author) in tess:
+        await ctx.send('вы не начали игру')
 
+    #print(integers[ctx.author.Name])
+    if not str(ctx.author) in tess and integer == None:
+        integers[str(ctx.author)] = random.randint(1, 10)
+        print(integers[str(ctx.author)])
+        await ctx.send(f'{ctx.author} , игра начата')
+        await ctx.send(f'{ctx.author} , введите число')
+        tess.append(str(ctx.author))
+        lives[str(ctx.author)] = 2
+        print(integers)
+        print(tess)
 
+    if str(ctx.author) in tess and not integer == None :
+        if int(integer) > integers[str(ctx.author)]:
+            await ctx.send('вы ввели число больше')
+            lives[str(ctx.author)] = lives[str(ctx.author)] - 1
+            if lives[str(ctx.author)] < 1:
+                await ctx.send('вы проиграли')
+                tess.remove(str(ctx.author))
+                integers.pop(ctx.author)
 
+        elif int(integer) < integers[str(ctx.author)]:
+            await ctx.send('вы ввели число меньше')
+            lives[str(ctx.author)] = lives[str(ctx.author)] - 1
+            if lives[str(ctx.author)] < 1:
+                await ctx.send('вы проиграли')
+                tess.remove(str(ctx.author))
+                integers.pop(ctx.author)
+                lives.pop(str(ctx.author))
 
+        if int(integer) == integers[str(ctx.author)]:
+            await ctx.send('вы выиграли')
+            tess.remove(str(ctx.author))
+            integers.pop(ctx.author)
+            print(integers)
 
 bot.run(config.key)
