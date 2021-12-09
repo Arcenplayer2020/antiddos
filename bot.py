@@ -77,7 +77,7 @@ async def game(ctx,integer = None):
         await ctx.send(f'{ctx.author} , игра начата')
         await ctx.send(f'{ctx.author} , введите число')
         tess.append(str(ctx.author))
-        lives[str(ctx.author)] = 2
+        lives[str(ctx.author)] = 10
         print(integers)
         print(tess)
 
